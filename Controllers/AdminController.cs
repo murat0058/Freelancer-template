@@ -3,6 +3,7 @@ using HafifCMS.ModelBinders;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -122,6 +123,15 @@ namespace HafifCMS.Controllers
         }
 
         [AuthorizationAttribute]
+        public ActionResult About()
+        {
+            ViewBag.Fields = Util.GetData()["About"];
+
+            return View("AboutListing");
+        }
+
+        [AuthorizationAttribute]
+        [HttpPost]
         public ActionResult About(string job, string id)
         {
             if (job == "del" && !String.IsNullOrEmpty(id))
@@ -140,6 +150,79 @@ namespace HafifCMS.Controllers
             ViewBag.Fields = Util.GetData()["About"];
 
             return View("AboutListing");
+        }
+
+        [AuthorizationAttribute]
+        public ActionResult GeneratePassword()
+        {
+            ViewBag.Result = String.Empty;
+
+            return View();
+        }
+
+        [AuthorizationAttribute]
+        [HttpPost]
+        public ActionResult GeneratePassword(string newPassword)
+        {
+            ViewBag.Result = Util.HashStringSHA1(newPassword);
+
+            return View();
+        }
+
+        [AuthorizationAttribute]
+        public ActionResult AboutEdit(string id)
+        {
+            if (String.IsNullOrEmpty(id))
+            {
+                return RedirectToAction("About");
+            }
+
+            dynamic objAbout = Util.GetData()["About"];
+            dynamic objSelected = new ExpandoObject();
+
+            bool exists = false;
+            foreach (dynamic obj in objAbout)
+            {
+                if (obj["id"] == id)
+                {
+                    objSelected = obj;
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists)
+                return RedirectToAction("About");
+
+            ViewBag.Fields = (dynamic)objSelected;
+            var selectionList = new List<SelectListItem>();
+
+            for (int i = 1; i < 13; i++)
+            {
+                selectionList.Add(new SelectListItem { Text = i.ToString(), Value = i.ToString() });
+            }
+
+            ViewBag.Selection = selectionList;
+
+            return View();
+        }
+
+        [AuthorizationAttribute]
+        [HttpPost]
+        public ActionResult AboutEdit([ModelBinder(typeof(FormModelBinder))] dynamic obj)
+        {
+            Dictionary<string, string> valuesToUpdate = new Dictionary<string, string>();
+
+            //foreach (var item in obj.fields)
+            //{
+            //    valuesToUpdate.Add("about-" + item.Key, item.Value);
+            //}
+
+            valuesToUpdate.Add("about-" + obj.fields["id"].Value, obj.fields["content"].Value);
+            valuesToUpdate.Add("about-cols-" + obj.fields["id"].Value, obj.fields["cols"].Value);
+
+            Util.UpdateDataFile(valuesToUpdate, new List<string>(), new List<string>());
+
+            return RedirectToAction("About");
         }
     }
 }
