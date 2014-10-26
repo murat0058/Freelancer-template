@@ -43,6 +43,6 @@ Temporary Items
 .apdisk
 
 *.suo
-bin/
-data/
-obj/
+bin/**
+data/**
+obj/**
