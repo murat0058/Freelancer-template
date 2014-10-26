@@ -207,22 +207,41 @@ namespace HafifCMS.Controllers
         }
 
         [AuthorizationAttribute]
-        [HttpPost]
+        [HttpPost, ValidateInput(false)]
         public ActionResult AboutEdit([ModelBinder(typeof(FormModelBinder))] dynamic obj)
         {
             Dictionary<string, string> valuesToUpdate = new Dictionary<string, string>();
 
-            //foreach (var item in obj.fields)
-            //{
-            //    valuesToUpdate.Add("about-" + item.Key, item.Value);
-            //}
-
-            valuesToUpdate.Add("about-" + obj.fields["id"].Value, obj.fields["content"].Value);
-            valuesToUpdate.Add("about-cols-" + obj.fields["id"].Value, obj.fields["cols"].Value);
+            valuesToUpdate.Add("about-" + obj.fields.id, obj.fields.content);
+            valuesToUpdate.Add("about-cols-" + obj.fields.id, obj.fields.cols);
 
             Util.UpdateDataFile(valuesToUpdate, new List<string>(), new List<string>());
 
             return RedirectToAction("About");
+        }
+
+        [AuthorizationAttribute]
+        public ActionResult Footer()
+        {
+            ViewBag.Fields = Util.GetData()["Footer"][0];
+
+            return View();
+        }
+
+        [AuthorizationAttribute]
+        [HttpPost, ValidateInput(false)]
+        public ActionResult Footer([ModelBinder(typeof(FormModelBinder))] dynamic obj)
+        {
+            Dictionary<string, string> valuesToUpdate = new Dictionary<string, string>();
+
+            foreach (var item in obj.fields)
+            {
+                valuesToUpdate.Add("footer-" + item.Key, item.Value);
+            }
+
+            Util.UpdateDataFile(valuesToUpdate, new List<string>(), new List<string>());
+
+            return RedirectToAction("Footer");
         }
     }
 }

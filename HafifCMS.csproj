@@ -519,6 +519,7 @@
     <Content Include="tinymce\examples\media\sample.dcr" />
     <Content Include="tinymce\examples\media\sample.ram" />
     <Content Include="tinymce\examples\media\sample.rm" />
+    <Content Include="Views\Admin\Footer.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
