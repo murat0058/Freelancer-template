@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "SiteConfigurations";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    string imgSiteIcon = "", imgSiteImage = "";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Site Configurations</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{ 
+    
+<div id="fields">
+    @foreach (dynamic obj1 in ViewBag.Fields)
+    {
+        if (obj1["key"] == "siteicon")
+        {
+            imgSiteIcon = "../" + obj1["value"];
+        }
+        else if (obj1["key"] == "siteimage")
+        {
+            imgSiteImage = "../" + obj1["value"];
+        }
+        else
+        {
+            <div id="div_@obj1["key"]" class="form-group">
+	        <label>@obj1["display"] :</label><div id="underdiv_@obj1["key"]" class="controls">
+		        <input name="field_@obj1["key"]" type="text" value="@obj1["value"]" id="field_@obj1["key"]" class="form-control" />
+	        </div>
+        </div>
+        }
+    }
+</div>
+<div class="row">
+    <div class="col-lg-6">
+        <label>Site Icon</label>
+        <img ID="imgSiteIcon" src="@imgSiteIcon" />
+        <input type="file" name="file_siteicon" />
+    </div>
+    <div class="col-lg-6">
+        <label>Site Image</label>
+        <img id="imgSiteImage" src="@imgSiteImage" />
+        <input type="file" name="file_siteimage" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <input type="submit" ID="btnSave" value="Save Changes" class="btn btn-lg btn-success btn-block" />
+    </div>
+</div>
+}

@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Admin - @ViewBag.Title</title>
+    @Styles.Render("~/Content/admincss")
+    
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div id="wrapper">
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Admin", "Index", null, new { @class = "navbar-brand" })
+            </div>
+            <!-- /.navbar-header -->
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li>
+                            <a href="/admin"><i class="fa fa-dashboard"></i> Home</a>
+                        </li>
+                        <li>
+                            <a href="/admin/siteconfigurations"><i class="fa fa-check-circle"></i> Site Configurations</a>
+                        </li>
+                        <li>
+                            <a href="/admin/opengraph"><i class="fa fa-facebook"></i> Open Graph</a>
+                        </li>
+                        <li>
+                            <a href="/admin/about"><i class="fa fa-tags"></i> About</a>
+                        </li>
+                        <li>
+                            <a href="/admin/portfolio"><i class="fa fa-suitcase"></i> Portfolio</a>
+                        </li>
+                        <li>
+                            <a href="/admin/social"><i class="fa fa-github"></i> Social</a>
+                        </li>
+                        <li>
+                            <a href="/admin/footer"><i class="fa fa-slack"></i> Footer</a>
+                        </li>
+                        <li>
+                            <a href="/admin/publishchanges"><i class="fa fa-flag-o"></i> Publish Changes</a>
+                        </li>
+                        <li>
+                            <a href="/admin/logout"><i class="fa fa-sign-out"></i> Signout</a>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+        </nav>
+
+            <!-- Page Content -->
+            <div id="page-wrapper">
+            @RenderBody()
+            </div>
+            <!-- /#page-wrapper -->
+        </div>
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+
+        @Scripts.Render("~/bundles/admin")
+</body>
+</html>
