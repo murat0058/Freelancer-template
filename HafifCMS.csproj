@@ -520,6 +520,9 @@
     <Content Include="tinymce\examples\media\sample.ram" />
     <Content Include="tinymce\examples\media\sample.rm" />
     <Content Include="Views\Admin\Footer.cshtml" />
+    <Content Include="Views\Admin\Social.cshtml" />
+    <Content Include="Views\Admin\Portfolio.cshtml" />
+    <Content Include="Views\Admin\PortfolioEdit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

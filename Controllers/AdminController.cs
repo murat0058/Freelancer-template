@@ -243,5 +243,123 @@ namespace HafifCMS.Controllers
 
             return RedirectToAction("Footer");
         }
+
+        [AuthorizationAttribute]
+        public ActionResult Social()
+        {
+            ViewBag.Fields = Util.GetData()["Social"];
+
+            return View();
+        }
+
+        [AuthorizationAttribute]
+        [HttpPost]
+        public ActionResult Social([ModelBinder(typeof(FormModelBinder))] dynamic obj)
+        {
+            Dictionary<string, string> valuesToUpdate = new Dictionary<string, string>();
+
+            foreach (var item in obj.fields)
+            {
+                valuesToUpdate.Add("social-" + item.Key, item.Value);
+            }
+
+            Util.UpdateDataFile(valuesToUpdate, new List<string>(), new List<string>());
+
+            return RedirectToAction("Social");
+        }
+
+        [AuthorizationAttribute]
+        public ActionResult Portfolio()
+        {
+            ViewBag.Fields = Util.GetData()["Portfolio"];
+
+            return View();
+        }
+
+        [AuthorizationAttribute]
+        [HttpPost]
+        public ActionResult Portfolio(string job, string id)
+        {
+            if (job == "del" && !String.IsNullOrEmpty(id))
+            {
+                List<string> Delete = new List<string>();
+                Delete.Add("portfolio-" + id);
+                Util.UpdateDataFile(new Dictionary<string, string>(), Delete, new List<string>());
+            }
+            if (job == "add")
+            {
+                List<string> Add = new List<string>();
+                Add.Add("portfolio");
+                Util.UpdateDataFile(new Dictionary<string, string>(), new List<string>(), Add);
+            }
+
+            ViewBag.Fields = Util.GetData()["Portfolio"];
+
+            return View("Portfolio");
+        }
+
+        [AuthorizationAttribute]
+        public ActionResult PortfolioEdit(string id)
+        {
+            if (String.IsNullOrEmpty(id))
+            {
+                return RedirectToAction("Portfolio");
+            }
+
+            dynamic objPortfolio = Util.GetData()["Portfolio"];
+            Dictionary<string, string> fields = new Dictionary<string, string>();
+            fields.Add("id", id);
+
+            bool exists = false;
+            foreach (dynamic obj in objPortfolio)
+            {
+                if (obj["id"] == id)
+                {
+                    fields.Add("title", obj.title);
+                    fields.Add("description", obj.description);
+                    fields.Add("sitelink", obj.sitelink);
+                    fields.Add("client", obj.client);
+                    fields.Add("date", obj.date);
+                    fields.Add("service", obj.service);
+                    fields.Add("image", "../" + obj.image);
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists)
+                return RedirectToAction("Portfolio");
+
+            ViewBag.Fields = fields;
+
+            return View();
+        }
+
+        [AuthorizationAttribute]
+        [HttpPost, ValidateInput(false)]
+        public ActionResult PortfolioEdit([ModelBinder(typeof(FormModelBinder))] dynamic obj)
+        {
+            Dictionary<string, string> valuesToUpdate = new Dictionary<string, string>();
+
+            foreach (var item in obj.fields)
+            {
+                valuesToUpdate.Add("portfolio-" + item.Key + "-" + obj.fields.id, item.Value);
+            }
+
+            foreach (var file in obj.files)
+            {
+                if (file.Value != null && file.Value.ContentLength > 0)
+                {
+                    var filePath = "Images/Portfolio/" + Path.GetFileName(file.Value.FileName);
+                    var path = Path.Combine(Server.MapPath("~/"), filePath);
+                    file.Value.SaveAs(path);
+                    valuesToUpdate.Add("portfolio-image-" + obj.fields.id, filePath);
+                }
+            }
+
+            Util.UpdateDataFile(valuesToUpdate, new List<string>(), new List<string>());
+
+            return RedirectToAction("Portfolio");
+        }
+
     }
 }
